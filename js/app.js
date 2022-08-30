@@ -1,18 +1,18 @@
 //const loadPhones = async() =>{
 
 //we need to fine elements by searching input field's value which is searchText
-const loadPhones = async (searchText) =>{
+const loadPhones = async (searchText, dataLimit) =>{
     const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
     const res =await fetch(url);
     const data =await res.json();
 //checked the data is getting or not
     //console.log(data.data);
-    displayPhones(data.data);
+    displayPhones(data.data, dataLimit);
 
 }
 
 //to display phones 
-const displayPhones = phones =>{
+const displayPhones = (phones, dataLimit) =>{
 ////checked the phones is getting or not
     //console.log(phones);
 
@@ -20,8 +20,15 @@ const displayPhones = phones =>{
     const phonesContainer = document.getElementById('phones-container');
     phonesContainer.textContent = '';
 
-//display 20phones only
-    phones =phones.slice(0, 15);
+//display some phones only
+    const showAll = document.getElementById('show-all');
+    if(dataLimit && phones.length > 12){
+        phones = phones.slice(0, 12);
+        showAll.classList.remove('d-none');
+    }
+    else{
+        showAll.classList.add('d-none');4
+    }
 
 //display no phones founds
     const noPhones = document.getElementById('not-found-msg');
@@ -51,18 +58,20 @@ const displayPhones = phones =>{
 
     //hide loader
     toggleSpinner(false);
-
 }
 
+
+const processSearch = (dataLimit)=>{
+    toggleSpinner(true);
+    const searchField = document.getElementById('search-feild');
+    const searchText = searchField.value;
+    loadPhones(searchText, dataLimit);
+}
 
 // search button's handler
 document.getElementById('btn-search').addEventListener('click', function(){
     //starts loader - first it will execuite loader then rest of searching
-    toggleSpinner(true);
-
-    const searchField = document.getElementById('search-feild');
-    const searchText = searchField.value;
-    loadPhones(searchText);
+    processSearch(10);      //will just show 10 items
 });
 
 const toggleSpinner = isLoading => {
@@ -74,4 +83,11 @@ const toggleSpinner = isLoading => {
         loaderSection.classList.add('d-none');
     }
 }
+
+//this is not the best way. but limitations of API we are doing this
+document.getElementById('btn-show-all').addEventListener('click', function(){
+    processSearch();    //in this btn there will no datalimit cz it will show all items
+});
+
+
 //loadPhones();
