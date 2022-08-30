@@ -19,6 +19,20 @@ const displayPhones = phones =>{
 //follow the 4steps to display
     const phonesContainer = document.getElementById('phones-container');
     phonesContainer.textContent = '';
+
+//display 20phones only
+    phones =phones.slice(0, 15);
+
+//display no phones founds
+    const noPhones = document.getElementById('not-found-msg');
+    if(phones.length === 0){
+        noPhones.classList.remove('d-none');
+    }
+    else{
+        noPhones.classList.add('d-none');
+    }
+
+//display all phones
     phones.forEach(phone => {
         const phoneDiv = document.createElement('div');
         phoneDiv.classList.add('col');
@@ -44,4 +58,4 @@ document.getElementById('btn-search').addEventListener('click', function(){
     loadPhones(searchText);
 });
 
-loadPhones();
+//loadPhones();
