@@ -40,6 +40,9 @@ const displayPhones = (phones, dataLimit) =>{
     }
 
 //display all phones
+
+//how to add modal in details button: add extra info data-bs-toggle="modal" data-bs-target="#phoneDetailModal" in show details button
+
     phones.forEach(phone => {
         const phoneDiv = document.createElement('div');
         phoneDiv.classList.add('col');
@@ -50,8 +53,8 @@ const displayPhones = (phones, dataLimit) =>{
                 <h5 class="card-title">${phone.phone_name}</h5>
                 <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
                                     content. This content is a little bit longer.</p>
-                <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary">Show Details</button>
-            </div>                
+                <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#phoneDetailModal">Show Details</button>
+            </div>
         </div>
         `;
         phonesContainer.appendChild(phoneDiv);
@@ -105,10 +108,24 @@ const loadPhoneDetails = async id =>{
     const url = `https://openapi.programming-hero.com/api/phone/${id}`;
     const res = await fetch(url);
     const data = await res.json();
-    console.log(data.data);
+    //console.log(data.data);
+    displayPhoneDetails(data.data);
 }
 
 
+const displayPhoneDetails = phone =>{
+    console.log(phone);
+    const modalTitle = document.getElementById('phoneDetailModalLabel');
+    modalTitle.innerText = phone.name;
+    const phoneDetails = document.getElementById('phone-details');
+    phoneDetails.innerHTML = `
+    <p>Release Date: ${phone.releaseDate ? phone.releaseDate : 'No release date found!'}</p>
+    <p>Storage: ${phone.mainFeatures ? phone.mainFeatures.storage : 'No storage information'}</p>
+    <p>Others: ${phone.others ? phone.others.Bluetooth : 'No Bluetooth information'}</p>
+    <p></p>
+    
+    `;
+}
 
 
-//loadPhones();
+loadPhones('apple');
